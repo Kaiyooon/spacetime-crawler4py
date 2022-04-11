@@ -1,5 +1,6 @@
 # Kei's Attempt :)
 # Jake's attempt to edit the file.
+# Lyla's change
 import re
 from urllib.parse import urlparse
 
@@ -20,7 +21,7 @@ def extract_next_links(url, resp):
     return list()
 
 def is_valid(url):
-    # Decide whether to crawl this url or not. 
+    # Decide whether to crawl this url or not.
     # If you decide to crawl it, return True; otherwise return False.
     # There are already some conditions that return False.
     try:
