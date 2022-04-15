@@ -77,7 +77,7 @@ def extract_next_links(url, resp):
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        for link in soup.find_all('a'):
+        for link in soup.find_all('a', attrs={'href': re.compile("^https://")}):
             hyperlinks.append(link.get('href'))
         print(hyperlinks)
     hyperlinks = list()
