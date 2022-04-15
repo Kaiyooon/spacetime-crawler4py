@@ -52,7 +52,20 @@ QUESTIONS FOR TA:
 ================================================================================
 
 * Is the definition of "page" the same for Questions 1, 2, and 3?
+    * Yes, but interpretations are different depending on unique vs. not unique.
+    * So Q1 ignores anything after the .edu (in the example), but Q2 and Q3 don't.
 * For Question #4, do we order first alphabetically, then by unique pages?
+    * as long as we do it alphabetically. TA just matches results against theirs.
+* EC +2 pts: Can use beautifulsoup to extract content. CANNOT USE library for
+    * detecting similarity, but can use to extract content.
+* Get response from the forked class
+* Call .content on scacetime crawler's Response class to get the content
+    * Beautiful soup gets all content of a page as well
+* Multithreading resources (TA couldn't help, but could point to resources):
+    * https://www.educba.com/python-threadpool/
+    * https://docs.python.org/3/library/threading.html
+* Can create new .py files
+* Format does not matter for the deliverables (Q#1-4) (as long as it's readable)
 '''
 
 import re
