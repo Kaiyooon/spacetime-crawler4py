@@ -2,6 +2,64 @@
 # Jake's attempt to edit the file.
 # Lyla's change
 # change #2
+#
+'''
+================================================================================
+TO-DO:
+================================================================================
+
+** ADD UCI ID'S TO CONFIG.INI FOLLOWING THE FORMAT **
+
+=====================
+Functionality Oriented:
+=====================
+* URL Behavior:
+    * Transform URLs from relative to absolute
+    * Send server requests with an ASCII URL and neither the HTML content of the
+      webpage that we are crawling nor UNICODE strings.
+* In "is_valid(url)", return "False" if not from the specified domains:
+    * *.ics.uci.edu/*
+    * *.cs.uci.edu/*
+    * *.informatics.uci.edu/*
+    * *.stat.uci.edu/*
+    * today.uci.edu/department/information_computer_sciences/*
+* Write a simple automatic trap detection system based on URL patterns and/or
+    content similarity or repetition over a certain amount of chained pages.
+* Detect and avoid sets of similar pages with no information.
+* Detect and avoid dead URLs that return a 200 status but no data
+======================
+Report Oriented:
+======================
+( Think about how to export these.... create .txt files somehwere upon completion
+  of crawling? )
+
+* Record number of unique pages (subdomains. ex: http://www.ics.uci.edu#aaa and
+  http://www.ics.uci.edu#bbb are the same URL for these purposes)
+* Record longest page in terms of the number of words (HTML markup doesn't count
+  as words)
+* Record 50 most common words in the entire set of pages (IGNORING English stop words,
+  found here: https://www.ranks.nl/stopwords).
+    * Order these by frequency
+* Record the number of ics.uci.edu subdomains
+    * Order these alphabetically and by the number of unique pages in each subdomain
+
+================================================================================
+IDEAS:
+================================================================================
+
+* For the return of extract_next_links():
+    * Use resp.(raw_response.(content.(txt))) to get a dictionary of HTML content.
+        * This can be parsed w/keys
+        * From https://realpython.com/python-requests/#the-response
+
+================================================================================
+QUESTIONS FOR TA:
+================================================================================
+
+* Is the definition of "page" the same for Questions 1, 2, and 3?
+* For Question #4, do we order first alphabetically, then by unique pages?
+'''
+
 import re
 from urllib.parse import urlparse
 
