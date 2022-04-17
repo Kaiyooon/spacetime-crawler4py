@@ -1,6 +1,8 @@
 # Jake's PartA tokenizer
 # Please replace with yours if it is faster!
 
+# Filter out HTML brackets
+# Find a way to filter out (and store) subdomains (Question 4)
 
 def tokenize(theTextFile):
     # Code from outside sources for handling exceptions:
