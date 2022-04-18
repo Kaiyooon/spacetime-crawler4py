@@ -20,5 +20,5 @@ class subdomains:
     def convert():
         subdomainlist = []
         for key, value in sorted(subdomains.subdomainLinks.items()):
-            subdomainlist.append(f"{key}, {value}")
+            subdomainlist.append(f"{key}, {len(value)}")
         return subdomainlist

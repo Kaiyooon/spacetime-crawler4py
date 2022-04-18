@@ -97,24 +97,26 @@ def extract_next_links(url, resp):
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
         for link in soup.find_all('a'):
             hyperlink = link.get('href')
+            # Get absolute URL.
+            # From third backslash, delete
+            # TLDE extract or URL Parse
+            # Get generalLink (ex: "https://hello.ics.uci.edu") from hyperlink (ex: "https://hello.ics.uci.edu/asdf")
             if is_valid(hyperlink):
                 hyperlinks.append(hyperlink)
-
-                # if not hasattr(extract_next_links, "uniquePages"):
-                #     extract_next_links.uniquePage = {}
-                # extract_next_links.uniquePages.add(hyperlink)
 
                 # add the link to the set if unique
                 unique.uniquePages.add(hyperlink)
 
+                ext = tldextract.extract(hyperlink)
                 # update the page count for the subdomain
-                if url in subdomains.subdomainLinks.keys():
-                    subdomains.subdomainLinks[url] += 1
+                # TODO: convert url to general url
+                if hyperlink not in subdomains.subdomainLinks.keys() and ext.subdomain not in subdomains.subdomains and ext.registered_domain == "ics.uci.edu":
+                    subdomains.subdomainLinks[generalLink].add(hyperlink)
 
                 # detect subdomains
-                ext = tldextract.extract(hyperlink)
                 if ext.subdomain not in subdomains.subdomains and ext.registered_domain == "ics.uci.edu":
-                    subdomains.subdomainLinks[hyperlink] = 0
+                    # TODO: convert url to general url
+                    subdomains.subdomainLinks[generalLink] = set()
                     subdomains.subdomains.add(ext.subdomain)
 
             else:
