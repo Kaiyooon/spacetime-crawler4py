@@ -71,10 +71,14 @@ QUESTIONS FOR TA:
 import re
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
+from tokenizer import tokenize, computeWordFrequencies
+from classes import unique, longest, common, subdomains
+
 
 def scraper(url, resp):
     links = extract_next_links(url, resp)
     return [link for link in links if is_valid(link)]
+
 
 def extract_next_links(url, resp):
     # Implementation required.
@@ -90,11 +94,54 @@ def extract_next_links(url, resp):
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        for link in soup.find_all('a', attrs={'href': re.compile("^https://")}):
-            hyperlinks.append(link.get('href'))
+        for link in soup.find_all('a'):
+            hyperlink = link.get('href')
+            if is_valid(hyperlink):
+                hyperlinks.append(hyperlink)
+
+                # if not hasattr(extract_next_links, "uniquePages"):
+                #     extract_next_links.uniquePage = {}
+                # extract_next_links.uniquePages.add(hyperlink)
+
+                # add the link to the set if unique
+                unique.uniquePages.add(hyperlink)
+
+                # update the page count for the subdomain
+                if url in subdomains.subdomains.keys():
+                    subdomains.subdomains[url] += 1
+
+                # detect subdomains
+                if hyperlink.startswith("https://") and hyperlink.endswith("ics.uci.edu") and hyperlink not in subdomains.subdomains.keys():
+                    subdomains.subdomains[hyperlink] = 0
+            else:
+                # this link is probably a path/fragment
+                hyperlink = link.get('href')
+                hyperlinks.append(url + hyperlink)
+
         print(hyperlinks)
+
+        tokenList = tokenize(resp.raw_response.content)
+
+        # update the longest page if there are more words than the current longest
+        if len(tokenList) > longest.longestPageLength:
+            longest.longestPage = url
+            longest.longestPageLength = len(tokenList)
+
+        # get a list of the 50 most common words
+        frequencies = computeWordFrequencies(tokenList)
+        common.commonWords = sorted(
+            frequencies.items(), key=lambda x: (-x[1], x[0]))[:50]
+
+        # update the report at each iteration until the the crawler finishes
+        f = open("report.txt", "w")
+        f.write(f"Unique Pages: {len(unique.uniquePages)}\n")
+        f.write(f"Longest Page: {longest.longestPage}\n")
+        f.write(f"Common Words: {common.commonWords}\n")
+        f.write(f"Subdomains: {subdomains.convert()}\n")
+        f.close()
     hyperlinks = list()
     return hyperlinks
+
 
 def is_valid(url):
     # Decide whether to crawl this url or not.
@@ -115,5 +162,5 @@ def is_valid(url):
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
 
     except TypeError:
-        print ("TypeError for ", parsed)
+        print("TypeError for ", parsed)
         raise
