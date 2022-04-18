@@ -14,10 +14,11 @@ class common:
 
 
 class subdomains:
-    subdomains = {}
+    subdomainLinks = {}
+    subdomains = set()
 
     def convert():
         subdomainlist = []
-        for key, value in sorted(subdomains.subdomains.items()):
+        for key, value in sorted(subdomains.subdomainLinks.items()):
             subdomainlist.append(f"{key}, {value}")
         return subdomainlist

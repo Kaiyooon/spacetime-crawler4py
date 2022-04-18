@@ -73,6 +73,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from tokenizer import tokenize, computeWordFrequencies
 from classes import unique, longest, common, subdomains
+import tldextract
 
 
 def scraper(url, resp):
@@ -107,18 +108,19 @@ def extract_next_links(url, resp):
                 unique.uniquePages.add(hyperlink)
 
                 # update the page count for the subdomain
-                if url in subdomains.subdomains.keys():
-                    subdomains.subdomains[url] += 1
+                if url in subdomains.subdomainLinks.keys():
+                    subdomains.subdomainLinks[url] += 1
 
                 # detect subdomains
-                if hyperlink.startswith("https://") and hyperlink.endswith("ics.uci.edu") and hyperlink not in subdomains.subdomains.keys():
-                    subdomains.subdomains[hyperlink] = 0
+                ext = tldextract.extract(hyperlink)
+                if ext.subdomain not in subdomains.subdomains and ext.registered_domain == "ics.uci.edu":
+                    subdomains.subdomainLinks[hyperlink] = 0
+                    subdomains.subdomains.add(ext.subdomain)
+
             else:
                 # this link is probably a path/fragment
                 hyperlink = link.get('href')
                 hyperlinks.append(url + hyperlink)
-
-        print(hyperlinks)
 
         tokenList = tokenize(resp.raw_response.content)
 
