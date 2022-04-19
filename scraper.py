@@ -95,6 +95,7 @@ def extract_next_links(url, resp):
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
+        # TODO: check if we visited a link before
         for link in soup.find_all('a'):
             hyperlink = link.get('href')
             # Get absolute URL.
@@ -132,6 +133,7 @@ def extract_next_links(url, resp):
             longest.longestPageLength = len(tokenList)
 
         # get a list of the 50 most common words
+        # TODO: make this a general map for every link
         frequencies = computeWordFrequencies(tokenList)
         common.commonWords = sorted(
             frequencies.items(), key=lambda x: (-x[1], x[0]))[:50]
