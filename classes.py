@@ -1,7 +1,7 @@
 
 
 class unique:
-    uniquePages = {}
+    uniquePages = set()
 
 
 class longest:
