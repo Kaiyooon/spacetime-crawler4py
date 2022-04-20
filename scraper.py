@@ -73,6 +73,7 @@ from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 from tokenizer import tokenize, tokenizeNoStopWords, computeWordFrequencies
 from classes import unique, longest, common, subdomains
+from urloperations import getSchemeAndDomain
 import tldextract
 
 
@@ -99,11 +100,10 @@ def extract_next_links(url, resp):
         for link in soup.find_all('a'):
             hyperlink = link.get('href')
             # Get absolute URL.
-            # From third backslash, delete
-            # TLDE extract or URL Parse
-            # Get generalLink (ex: "https://hello.ics.uci.edu") from hyperlink (ex: "https://hello.ics.uci.edu/asdf")
             if is_valid(hyperlink):
                 hyperlinks.append(urldefrag(hyperlink))
+
+                generalLink = getSchemeAndDomain(hyperlinks[link])
 
                 # add the link to the set if unique
                 unique.uniquePages.add(hyperlink)
