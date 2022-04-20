@@ -126,6 +126,7 @@ def extract_next_links(url, resp):
                 hyperlinks.append(url + hyperlink)
 
         tokenList = tokenize(resp.raw_response.content)
+        tokenListNoStopWords = tokenizeNoStopWords(resp.raw_response.content)
 
         # update the longest page if there are more words than the current longest
         if len(tokenList) > longest.longestPageLength:
@@ -134,7 +135,7 @@ def extract_next_links(url, resp):
 
         # get a list of the 50 most common words
         # TODO: make this a general map for every link
-        frequencies = computeWordFrequencies(tokenList)
+        frequencies = computeWordFrequencies(tokenListNoStopWords)
         common.commonWords = sorted(
             frequencies.items(), key=lambda x: (-x[1], x[0]))[:50]
 
