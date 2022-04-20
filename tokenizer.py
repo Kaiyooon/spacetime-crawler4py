@@ -2,34 +2,25 @@ from collections import defaultdict
 from bs4 import BeautifulSoup
 import re
 
+
 def isNotAStopWord(token):
-    stopWords = ["a","about","above","after","again","against","all","am","an","and"
-        ,"any","areas","at","be","because","been","before","being","below","between"
-        ,"both","but","by","cannot","could","did","do","does","doing","down","during"
-        ,"each","few","for","from","further","had","has","have","having","he","her"
-        ,"here","hers","herself","him","himself","his","how","i","if","in","into","is"
-        ,"it","its","itself","me","more","most","my","myself","no","nor","not","of","off"
-        ,"on","once","only","or","other","ought","our","ours","ourselves","out","over","own"
-        ,"same","she","should","so","some","such","than","that","the","their","theirs","them"
-        ,"themselves","then","there","these","they","this","those","through","to","too","under"
-        ,"until","up","very","was","we","were","what","when","where","which","while","who"
-        ,"whom","why","with","would","you","your","yours","yourself","yourselves"]
+    stopWords = ["a", "about", "above", "after", "again", "against", "all", "am", "an", "and", "any", "areas", "at", "be", "because", "been", "before", "being", "below", "between", "both", "but", "by", "cannot", "could", "did", "do", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he", "her", "here", "hers", "herself", "him", "himself", "his", "how", "i", "if", "in", "into", "is", "it", "its", "itself", "me", "more", "most", "my", "myself",
+                 "no", "nor", "not", "of", "off", "on", "once", "only", "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "should", "so", "some", "such", "than", "that", "the", "their", "theirs", "them", "themselves", "then", "there", "these", "they", "this", "those", "through", "to", "too", "under", "until", "up", "very", "was", "we", "were", "what", "when", "where", "which", "while", "who", "whom", "why", "with", "would", "you", "your", "yours", "yourself", "yourselves"]
     if token in stopWords:
-        return false
-    return true
+        return False
+    return True
+
 
 def parse_text(text_string):
     # The list of tokens
     tokens = []
-    # The list of tokens without stop words
-    tokensNoStopWords = []
     # The individual token the below loop works with
     token = ""
     # Loop through all characters from a website's text
     for char in text_string:
         # If a character is alphanumeric, add it to the individual token
         if re.match('^[a-zA-Z0-9]+$', char):
-                token += char
+            token += char
         # If a character is not alphanumeric, begin to append to one of the lists
         else:
             # If the existing token is alphanumeric
@@ -45,6 +36,7 @@ def parse_text(text_string):
 
     return tokens
 
+
 def parseTextNoStopWords(text_string):
     # The list of tokens without stop words
     tokensNoStopWords = []
@@ -54,7 +46,7 @@ def parseTextNoStopWords(text_string):
     for char in text_string:
         # If a character is alphanumeric, add it to the individual token
         if re.match('^[a-zA-Z0-9]+$', char):
-                token += char
+            token += char
         # If a character is not alphanumeric, begin to append to one of the lists
         else:
             # If the existing token is alphanumeric
@@ -72,6 +64,7 @@ def parseTextNoStopWords(text_string):
 
     return tokensNoStopWords
 
+
 def tokenize(html_file):
     soup = BeautifulSoup(html_file, "html.parser")
     tokens = ["foo"]
@@ -80,6 +73,7 @@ def tokenize(html_file):
     tokens = parse_text(text_string)
     return tokens
 
+
 def tokenizeNoStopWords(html_file):
     soup = BeautifulSoup(html_file, "html.parser")
     tokensNoStopWords = ["foo"]
@@ -87,6 +81,7 @@ def tokenizeNoStopWords(html_file):
     text_string = soup.get_text(strip=True)
     tokensNoStopWords = parseTextNoStopWords(text_string)
     return tokensNoStopWords
+
 
 def computeWordFrequencies(tokenList):
     frequencies = defaultdict(int)

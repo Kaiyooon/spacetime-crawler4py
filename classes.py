@@ -12,6 +12,13 @@ class longest:
 class common:
     commonWords = {}
 
+    def calculate(newDict):
+        for key, value in newDict.items():
+            if key in common.commonWords.keys():
+                common.commonWords[key] += value
+            else:
+                common.commonWords[key] = value
+
 
 class subdomains:
     subdomainLinks = {}

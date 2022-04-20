@@ -69,9 +69,9 @@ QUESTIONS FOR TA:
 '''
 
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
-from tokenizer import tokenize, computeWordFrequencies
+from tokenizer import tokenize, tokenizeNoStopWords, computeWordFrequencies
 from classes import unique, longest, common, subdomains
 import tldextract
 
@@ -103,27 +103,31 @@ def extract_next_links(url, resp):
             # TLDE extract or URL Parse
             # Get generalLink (ex: "https://hello.ics.uci.edu") from hyperlink (ex: "https://hello.ics.uci.edu/asdf")
             if is_valid(hyperlink):
-                hyperlinks.append(hyperlink)
+                hyperlinks.append(urldefrag(hyperlink))
 
                 # add the link to the set if unique
                 unique.uniquePages.add(hyperlink)
 
                 ext = tldextract.extract(hyperlink)
+                parsed = urlparse(hyperlink)
                 # update the page count for the subdomain
-                # TODO: convert url to general url
-                if hyperlink not in subdomains.subdomainLinks.keys() and ext.subdomain not in subdomains.subdomains and ext.registered_domain == "ics.uci.edu":
-                    subdomains.subdomainLinks[generalLink].add(hyperlink)
+                if ext.subdomain in subdomains.subdomains and parsed.netloc.endswith("ics.uci.edu") and hyperlink not in subdomains.subdomainLinks["http://" + ext.subdomain + ".ics.uci.edu"]:
+                    subdomains.subdomainLinks["http://" +
+                                              ext.subdomain + ".ics.uci.edu"].add(hyperlink)
 
                 # detect subdomains
-                if ext.subdomain not in subdomains.subdomains and ext.registered_domain == "ics.uci.edu":
-                    # TODO: convert url to general url
-                    subdomains.subdomainLinks[generalLink] = set()
+                if ext.subdomain not in subdomains.subdomains and parsed.netloc.endswith("ics.uci.edu"):
+                    subdomains.subdomainLinks["http://" +
+                                              ext.subdomain + ".ics.uci.edu"] = set()
                     subdomains.subdomains.add(ext.subdomain)
+                    if parsed.path != '' or parsed.params != '' or parsed.query != '' or parsed.fragment != '':
+                        subdomains.subdomainLinks["http://" +
+                                                  ext.subdomain + ".ics.uci.edu"].add(hyperlink)
 
             else:
                 # this link is probably a path/fragment
                 hyperlink = link.get('href')
-                hyperlinks.append(url + hyperlink)
+                hyperlinks.append(urljoin(url, hyperlink))
 
         tokenList = tokenize(resp.raw_response.content)
         tokenListNoStopWords = tokenizeNoStopWords(resp.raw_response.content)
@@ -134,16 +138,16 @@ def extract_next_links(url, resp):
             longest.longestPageLength = len(tokenList)
 
         # get a list of the 50 most common words
-        # TODO: make this a general map for every link
         frequencies = computeWordFrequencies(tokenListNoStopWords)
-        common.commonWords = sorted(
+        common.calculate(frequencies)
+        fiftyMostCommon = sorted(
             frequencies.items(), key=lambda x: (-x[1], x[0]))[:50]
 
         # update the report at each iteration until the the crawler finishes
         f = open("report.txt", "w")
         f.write(f"Unique Pages: {len(unique.uniquePages)}\n")
         f.write(f"Longest Page: {longest.longestPage}\n")
-        f.write(f"Common Words: {common.commonWords}\n")
+        f.write(f"Common Words: {fiftyMostCommon}\n")
         f.write(f"Subdomains: {subdomains.convert()}\n")
         f.close()
     hyperlinks = list()
