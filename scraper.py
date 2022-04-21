@@ -116,8 +116,6 @@ def extract_next_links(url, resp):
 
                 # detect subdomains
                 if parsed.netloc.endswith(".ics.uci.edu") and extractSubdomain(parsed.netloc) not in subdomains.subdomains:
-                    print(hyperlink)
-                    print(extractSubdomain(parsed.netloc))
                     subdomains.subdomainLinks["http://" + extractSubdomain(
                         parsed.netloc) + ".ics.uci.edu"] = set()
                     subdomains.subdomains.add(extractSubdomain(
