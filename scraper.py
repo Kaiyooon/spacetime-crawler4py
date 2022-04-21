@@ -73,7 +73,7 @@ from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 from tokenizer import tokenize, tokenizeNoStopWords, computeWordFrequencies
 from classes import unique, longest, common, subdomains
-from urloperations import getSchemeAndDomain
+from urloperations import getSchemeAndDomain, extractSubdomain
 import tldextract
 
 
@@ -110,18 +110,21 @@ def extract_next_links(url, resp):
                 ext = tldextract.extract(hyperlink)
                 parsed = urlparse(hyperlink)
                 # update the page count for the subdomain
-                if ext.subdomain in subdomains.subdomains and parsed.netloc.endswith("ics.uci.edu") and hyperlink not in subdomains.subdomainLinks["http://" + ext.subdomain + ".ics.uci.edu"]:
+                if parsed.netloc.endswith(".ics.uci.edu") and extractSubdomain(parsed.netloc) in subdomains.subdomains and hyperlink not in subdomains.subdomainLinks["http://" + extractSubdomain(parsed.netloc) + ".ics.uci.edu"]:
                     subdomains.subdomainLinks["http://" +
-                                              ext.subdomain + ".ics.uci.edu"].add(hyperlink)
+                                              extractSubdomain(parsed.netloc) + ".ics.uci.edu"].add(hyperlink)
 
                 # detect subdomains
-                if ext.subdomain not in subdomains.subdomains and parsed.netloc.endswith("ics.uci.edu"):
-                    subdomains.subdomainLinks["http://" +
-                                              ext.subdomain + ".ics.uci.edu"] = set()
-                    subdomains.subdomains.add(ext.subdomain)
+                if parsed.netloc.endswith(".ics.uci.edu") and extractSubdomain(parsed.netloc) not in subdomains.subdomains:
+                    print(hyperlink)
+                    print(extractSubdomain(parsed.netloc))
+                    subdomains.subdomainLinks["http://" + extractSubdomain(
+                        parsed.netloc) + ".ics.uci.edu"] = set()
+                    subdomains.subdomains.add(extractSubdomain(
+                        parsed.netloc))
                     if parsed.path != '' or parsed.params != '' or parsed.query != '' or parsed.fragment != '':
-                        subdomains.subdomainLinks["http://" +
-                                                  ext.subdomain + ".ics.uci.edu"].add(hyperlink)
+                        subdomains.subdomainLinks["http://" + extractSubdomain(
+                            parsed.netloc) + ".ics.uci.edu"].add(hyperlink)
 
             else:
                 # this link is probably a path/fragment
@@ -149,7 +152,6 @@ def extract_next_links(url, resp):
         f.write(f"Common Words: {fiftyMostCommon}\n")
         f.write(f"Subdomains: {subdomains.convert()}\n")
         f.close()
-    hyperlinks = list()
     return hyperlinks
 
 

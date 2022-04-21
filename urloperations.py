@@ -1,3 +1,5 @@
+
+
 def getSchemeAndDomain(hyperlink):
     # Split the first 3 "/" into separate strings,
     # for a total of 4 strings. "http(s):" as index 0, "" as index 1, domain as
@@ -14,3 +16,18 @@ def getSchemeAndDomain(hyperlink):
     returnableString += temporaryString[2]
 
     return returnableString
+
+    # def getDomain(hyperlink):
+    # # Outside code used to assist with navigating .split:
+    # # https://www.w3schools.com/python/ref_string_split.asp
+    # temporaryString = hyperlink.split("/", 3)
+    # # appends with domain
+    # returnableString = temporaryString[2]
+
+    # return returnableString
+
+
+def extractSubdomain(domain):
+    splitPeriod = domain.split('.')
+    splitSubdomain = splitPeriod[:-3]
+    return '.'.join(splitSubdomain)
