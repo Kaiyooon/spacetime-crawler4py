@@ -96,19 +96,13 @@ def extract_next_links(url, resp):
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
-        if url == "https://www.ics.uci.edu":
-            f = open("content.txt", "w")
-            f.write(str(resp.raw_response.content))
-            f.close()
-            print(resp.raw_response.content)
-        # TODO: check if we visited a link before
         for link in soup.find_all('a'):
             hyperlink = link.get('href')
             # Get absolute URL.
             if is_valid(hyperlink):
                 hyperlinks.append(urldefrag(hyperlink))
 
-                generalLink = getSchemeAndDomain(hyperlink)
+                # generalLink = getSchemeAndDomain(hyperlink)
 
                 # add the link to the set if unique
                 unique.uniquePages.add(hyperlink)
@@ -146,7 +140,7 @@ def extract_next_links(url, resp):
         frequencies = computeWordFrequencies(tokenListNoStopWords)
         common.calculate(frequencies)
         fiftyMostCommon = sorted(
-            frequencies.items(), key=lambda x: (-x[1], x[0]))[:50]
+            common.commonWords.items(), key=lambda x: (-x[1], x[0]))[:50]
 
         # update the report at each iteration until the the crawler finishes
         f = open("report.txt", "w")
