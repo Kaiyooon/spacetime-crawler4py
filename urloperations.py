@@ -5,12 +5,12 @@ def getSchemeAndDomain(hyperlink):
     #
     # Outside code used to assist with navigating .split:
     # https://www.w3schools.com/python/ref_string_split.asp
-    temporaryString = hyperlink.split("/",3)
+    temporaryString = hyperlink.split("/", 3)
     # appends with "https:" or "http:""
     returnableString = temporaryString[0]
     # appends with "//"
-    returnableString.append("//")
+    returnableString += "//"
     # appends with domain
-    returnableString.append(temporaryString[2])
+    returnableString += temporaryString[2]
 
     return returnableString

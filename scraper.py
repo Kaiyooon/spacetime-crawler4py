@@ -96,6 +96,11 @@ def extract_next_links(url, resp):
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
+        if url == "https://www.ics.uci.edu":
+            f = open("content.txt", "w")
+            f.write(str(resp.raw_response.content))
+            f.close()
+            print(resp.raw_response.content)
         # TODO: check if we visited a link before
         for link in soup.find_all('a'):
             hyperlink = link.get('href')
@@ -103,7 +108,7 @@ def extract_next_links(url, resp):
             if is_valid(hyperlink):
                 hyperlinks.append(urldefrag(hyperlink))
 
-                generalLink = getSchemeAndDomain(hyperlinks[link])
+                generalLink = getSchemeAndDomain(hyperlink)
 
                 # add the link to the set if unique
                 unique.uniquePages.add(hyperlink)
