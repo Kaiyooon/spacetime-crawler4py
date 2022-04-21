@@ -100,12 +100,12 @@ def extract_next_links(url, resp):
             hyperlink = link.get('href')
             # Get absolute URL.
             if is_valid(hyperlink):
-                hyperlinks.append(urldefrag(hyperlink))
+                hyperlinks.append(hyperlink)
 
                 # generalLink = getSchemeAndDomain(hyperlink)
 
                 # add the link to the set if unique
-                unique.uniquePages.add(hyperlink)
+                unique.uniquePages.add(urldefrag(hyperlink))
 
                 ext = tldextract.extract(hyperlink)
                 parsed = urlparse(hyperlink)
