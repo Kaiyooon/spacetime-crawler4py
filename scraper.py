@@ -100,6 +100,8 @@ def extract_next_links(url, resp):
             hyperlink = link.get('href')
             # Get absolute URL.
             if is_valid(hyperlink):
+                if hyperlink in unique.uniquePages:
+                    continue
                 hyperlinks.append(hyperlink)
 
                 # generalLink = getSchemeAndDomain(hyperlink)
@@ -160,6 +162,8 @@ def is_valid(url):
     try:
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
+            return False
+        if parsed.netloc == swiki.ics.uci.edu and parsed.path.startswith("doku.php/"):
             return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
