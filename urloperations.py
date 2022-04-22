@@ -44,14 +44,16 @@ def get_features(s):
 
 
 def check_dups(content):
-    if len(content) > 2000:
-        content = content[:2000]
-    s = SimHash(get_features(content))
+    if len(content) > 50000:
+        content = content[:50000]
+    s = Simhash(get_features(content))
     objs = [(str(k), Simhash(get_features(v)))
             for k, v in simhash_data.data.items()]
     index = SimhashIndex(objs, k=3)
     if len(index.get_near_dups(s)) == 0:
-        simhash_data.data.add(simhash_data.uniqueID, s)
+        simhash_data.data[simhash_data.uniqueID] = content
         simhash_data.uniqueID += 1
+        print("W")
         return False
+    print("L")
     return True

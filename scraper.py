@@ -93,7 +93,7 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
-    informationValue = 20
+    informationValue = 5
     hyperlinks = list()
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
@@ -177,7 +177,7 @@ def is_valid(url):
         parsed = urlparse(url)
         if parsed.scheme not in set(["http", "https"]):
             return False
-        if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("doku.php/"):
+        if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
             return False
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
