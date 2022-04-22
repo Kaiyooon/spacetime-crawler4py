@@ -29,3 +29,7 @@ class subdomains:
         for key, value in sorted(subdomains.subdomainLinks.items()):
             subdomainlist.append(f"{key}, {len(value)}")
         return subdomainlist
+
+
+class simhash_data:
+    data = {}

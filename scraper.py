@@ -73,8 +73,9 @@ from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 from tokenizer import tokenize, tokenizeNoStopWords, computeWordFrequencies
 from classes import unique, longest, common, subdomains
-from urloperations import getSchemeAndDomain, extractSubdomain
+from urloperations import getSchemeAndDomain, extractSubdomain, check_dups
 import tldextract
+from simhash import Simhash, SimhashIndex
 
 
 def scraper(url, resp):
@@ -92,10 +93,22 @@ def extract_next_links(url, resp):
     #         resp.raw_response.url: the url, again
     #         resp.raw_response.content: the content of the page!
     # Return a list with the hyperlinks (as strings) scrapped from resp.raw_response.content
+    informationValue = 20
     hyperlinks = list()
     if resp.status == 200:
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
+
+        # First we check if the content is duplicate
+        if check_dups(resp.raw_response.content):
+            return hyperlinks
+        # We then check if it is low information so is it worth crawling
+        tokenList = tokenize(resp.raw_response.content)
+        tokenListNoStopWords = tokenizeNoStopWords(
+            resp.raw_response.content)
+        if len(tokenListNoStopWords) <= informationValue:
+            return hyperlinks
+
         for link in soup.find_all('a'):
             hyperlink = link.get('href')
             # Get absolute URL.
@@ -130,9 +143,6 @@ def extract_next_links(url, resp):
                 # this link is probably a path/fragment
                 hyperlink = link.get('href')
                 hyperlinks.append(urljoin(url, hyperlink))
-
-        tokenList = tokenize(resp.raw_response.content)
-        tokenListNoStopWords = tokenizeNoStopWords(resp.raw_response.content)
 
         # update the longest page if there are more words than the current longest
         if len(tokenList) > longest.longestPageLength:

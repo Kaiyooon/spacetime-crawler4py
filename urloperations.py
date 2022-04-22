@@ -1,3 +1,6 @@
+from simhash import Simhash, SimhashIndex
+import re
+from classes import simhash_data
 
 
 def getSchemeAndDomain(hyperlink):
@@ -31,3 +34,22 @@ def extractSubdomain(domain):
     splitPeriod = domain.split('.')
     splitSubdomain = splitPeriod[:-3]
     return '.'.join(splitSubdomain)
+
+
+def get_features(s):
+    width = 3
+    s = s.lower()
+    s = re.sub(r'[^\w]+', '', s)
+    return [s[i:i + width] for i in range(max(len(s) - width + 1, 1))]
+
+
+def check_dups(content):
+    s = SimHash(get_features(content))
+    objs = [(str(k), Simhash(get_features(v)))
+            for k, v in simhash_data.data.items()]
+    index = SimhashIndex(objs, k=3)
+    if len(index.get_near_dups(s)) == 0:
+        simhash_data.data.add(simhash_data.uniqueID, s)
+        simhash_data.uniqueID += 1
+        return False
+    return True
