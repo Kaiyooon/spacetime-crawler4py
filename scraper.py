@@ -99,6 +99,11 @@ def extract_next_links(url, resp):
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
 
+        # For get_text
+        # https://stackoverflow.com/questions/14694482/converting-html-to-text-with-python
+        stringAllContent = soup.get_text()
+
+
         # First we check if the content is duplicate
         if check_dups(resp.raw_response.content):
             return hyperlinks
