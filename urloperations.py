@@ -56,7 +56,5 @@ def check_dups(content):
     if len(index.get_near_dups(s)) == 0:
         simhash_data.data[simhash_data.uniqueID] = content
         simhash_data.uniqueID += 1
-        print("W")
         return False
-    print("L")
     return True
