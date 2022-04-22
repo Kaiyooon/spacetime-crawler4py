@@ -44,6 +44,8 @@ def get_features(s):
 
 
 def check_dups(content):
+    if len(content) > 2000:
+        content = content[:2000]
     s = SimHash(get_features(content))
     objs = [(str(k), Simhash(get_features(v)))
             for k, v in simhash_data.data.items()]

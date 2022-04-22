@@ -103,9 +103,8 @@ def extract_next_links(url, resp):
         # https://stackoverflow.com/questions/14694482/converting-html-to-text-with-python
         stringAllContent = soup.get_text()
 
-
         # First we check if the content is duplicate
-        if check_dups(resp.raw_response.content):
+        if check_dups(stringAllContent):
             return hyperlinks
         # We then check if it is low information so is it worth crawling
         tokenList = tokenize(resp.raw_response.content)
