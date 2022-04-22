@@ -33,3 +33,5 @@ class subdomains:
 
 class simhash_data:
     data = {}
+    # we need a unique key so we'll just use a counter
+    uniqueID = 0
