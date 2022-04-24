@@ -117,6 +117,7 @@ def extract_next_links(url, resp):
             hyperlink = link.get('href')
             # Get absolute URL.
             if is_valid(hyperlink):
+                hyperlink = urldefrag(hyperlink)
                 if hyperlink in unique.uniquePages:
                     continue
                 hyperlinks.append(hyperlink)
@@ -124,7 +125,7 @@ def extract_next_links(url, resp):
                 # generalLink = getSchemeAndDomain(hyperlink)
 
                 # add the link to the set if unique
-                unique.uniquePages.add(urldefrag(hyperlink))
+                unique.uniquePages.add(hyperlink)
 
                 ext = tldextract.extract(hyperlink)
                 parsed = urlparse(hyperlink)
