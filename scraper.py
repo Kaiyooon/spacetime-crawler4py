@@ -146,9 +146,9 @@ def extract_next_links(url, resp):
             else:
                 # this link is probably a path/fragment
                 hyperlink = link.get('href')
-
-                if(is_valid_domain(urljoin(url,hyperlink))):
-                    hyperlinks.append(urljoin(url,hyperlink))
+                d = urldefrag(urljoin(url, hyperlink))
+                if is_valid_domain(d) and d not in unique.uniquePages:
+                    hyperlinks.append(d)
 
         # update the longest page if there are more words than the current longest
         if len(tokenList) > longest.longestPageLength:
@@ -169,6 +169,7 @@ def extract_next_links(url, resp):
         f.write(f"Subdomains: {subdomains.convert()}\n")
         f.close()
     return hyperlinks
+
 
 def is_valid_domain(url):
     try:
@@ -200,7 +201,6 @@ def is_valid(url):
                 return False
             if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
                 return False
-
 
             return not re.match(
                 r".*\.(css|js|bmp|gif|jpe?g|ico"

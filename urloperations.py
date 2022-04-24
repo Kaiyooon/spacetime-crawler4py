@@ -37,6 +37,8 @@ def extractSubdomain(domain):
 
 # Outside code used:
 # https://leons.im/posts/a-python-implementation-of-simhash-algorithm/
+
+
 def get_features(s):
     width = 3
     s = s.lower()
@@ -45,8 +47,8 @@ def get_features(s):
 
 
 def check_dups(content):
-    if len(content) > 50000:
-        content = content[:50000]
+    if len(content) > 10000:
+        content = content[:10000]
     s = Simhash(get_features(content))
     # Outside code used below:
     # https://leons.im/posts/a-python-implementation-of-simhash-algorithm/
