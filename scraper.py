@@ -202,9 +202,20 @@ def is_valid(url):
                 return False
             if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
                 return False
-            # Manually blacklist this trap
-            if parsed.netloc.endswith("evoke.ics.uci.edu") and parsed.query.startswith("replytocom="):
-                return False
+            # Manually whitelist only certain pages from evoke.ics.uci.edu
+            # All others are blacklisted
+            if parsed.netloc.endswith("evoke.ics.uci.edu"):
+                # Home
+                if parsed.path == ("/") or parsed.path == (""):
+                    return True
+                # D&CA Page
+                elif parsed.path == ("/dca2021/"):
+                    return True
+                # Recruitment Page
+                elif parsed.path == ("/recruitment/"):
+                    return True
+                else:
+                    return False
 
             return not re.match(
                 r".*\.(css|js|bmp|gif|jpe?g|ico"
