@@ -202,6 +202,9 @@ def is_valid(url):
                 return False
             if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
                 return False
+            # Manually blacklist this trap
+            if parsed.netloc.endswith("evoke.ics.uci.edu") and parsed.path.startswith("geof-bowker-speaks-at-michigan")
+                return False
 
             return not re.match(
                 r".*\.(css|js|bmp|gif|jpe?g|ico"
