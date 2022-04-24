@@ -117,7 +117,7 @@ def extract_next_links(url, resp):
             hyperlink = link.get('href')
             # Get absolute URL.
             if is_valid(hyperlink):
-                hyperlink = urldefrag(hyperlink)
+                hyperlink = urldefrag(hyperlink).url
                 if hyperlink in unique.uniquePages:
                     continue
                 hyperlinks.append(hyperlink)
@@ -147,7 +147,7 @@ def extract_next_links(url, resp):
             else:
                 # this link is probably a path/fragment
                 hyperlink = link.get('href')
-                d = urldefrag(urljoin(url, hyperlink))
+                d = urldefrag(urljoin(url, hyperlink)).url
                 if is_valid_domain(d) and d not in unique.uniquePages:
                     hyperlinks.append(d)
 
