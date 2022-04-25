@@ -127,7 +127,8 @@ def extract_next_links(url, resp):
                 # add the link to the set if unique
                 unique.uniquePages.add(hyperlink)
 
-                ext = tldextract.extract(hyperlink)
+                # Commented out because this does nothing
+                # ext = tldextract.extract(hyperlink)
                 parsed = urlparse(hyperlink)
                 # update the page count for the subdomain
                 if parsed.netloc.endswith(".ics.uci.edu") and extractSubdomain(parsed.netloc) in subdomains.subdomains and hyperlink not in subdomains.subdomainLinks["http://" + extractSubdomain(parsed.netloc) + ".ics.uci.edu"]:
