@@ -35,3 +35,8 @@ class simhash_data:
     data = {}
     # we need a unique key so we'll just use a counter
     uniqueID = 0
+
+
+class query_counter:
+    current_url = ""
+    counter = 0

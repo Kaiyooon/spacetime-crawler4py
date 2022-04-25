@@ -72,9 +72,8 @@ import re
 from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 from tokenizer import tokenize, tokenizeNoStopWords, computeWordFrequencies
-from classes import unique, longest, common, subdomains
+from classes import unique, longest, common, subdomains, query_counter
 from urloperations import getSchemeAndDomain, extractSubdomain, check_dups, urlCheck
-from simhash import Simhash, SimhashIndex
 
 
 def scraper(url, resp):
@@ -95,6 +94,22 @@ def extract_next_links(url, resp):
     informationValue = 15
     hyperlinks = list()
     if resp.status == 200:
+        # parse the current url
+        parsed = urlparse(url)
+        # if current url is empty replace it
+        if query_counter.current_url == "":
+            query_counter.current_url = url
+        # if the current path is the same and it has a query increase the query counter
+        elif parsed.scheme == urlparse(query_counter.current_url).scheme and parsed.netloc == urlparse(query_counter.current_url).netloc and parsed.path == urlparse(query_counter.current_url).path and parsed.query != '':
+            query_counter.counter += 1
+        # if the counter reaches 100 and it's still the same path, return an empty list
+        elif parsed.scheme == urlparse(query_counter.current_url).scheme and parsed.netloc == urlparse(query_counter.current_url).netloc and parsed.path == urlparse(query_counter.current_url).path and parsed.query != '' and query_counter.counter == 100:
+            return hyperlinks
+        # if different path, reset the current url and the counter
+        else:
+            query_counter.current_url = url
+            query_counter.counter = 0
+
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, features="xml")
 
