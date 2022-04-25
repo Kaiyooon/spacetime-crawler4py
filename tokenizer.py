@@ -67,8 +67,6 @@ def parseTextNoStopWords(text_string):
 
 def tokenize(html_file):
     soup = BeautifulSoup(html_file, "html.parser")
-    tokens = ["foo"]
-
     text_string = soup.get_text(strip=True)
     tokens = parse_text(text_string)
     return tokens
@@ -76,8 +74,6 @@ def tokenize(html_file):
 
 def tokenizeNoStopWords(html_file):
     soup = BeautifulSoup(html_file, "html.parser")
-    tokensNoStopWords = ["foo"]
-
     text_string = soup.get_text(strip=True)
     tokensNoStopWords = parseTextNoStopWords(text_string)
     return tokensNoStopWords
