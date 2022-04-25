@@ -217,6 +217,8 @@ def is_valid(url):
                     return True
                 else:
                     return False
+            if parsed.netloc.endswith("cbcl.ics.uci.edu") and parsed.path.startswith("/public_data/wgEncodeBroadHistone"):
+                return False
 
             return not re.match(
                 r".*\.(css|js|bmp|gif|jpe?g|ico"
