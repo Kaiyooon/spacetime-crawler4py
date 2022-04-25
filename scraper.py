@@ -96,19 +96,24 @@ def extract_next_links(url, resp):
     if resp.status == 200:
         # parse the current url
         parsed = urlparse(url)
+
+        if query_counter.current_url != "":
+            parsed_current = urlparse(query_counter.current_url)
         # if current url is empty replace it
         if query_counter.current_url == "":
             query_counter.current_url = url
         # if the current path is the same and it has a query increase the query counter
-        elif parsed.scheme == urlparse(query_counter.current_url).scheme and parsed.netloc == urlparse(query_counter.current_url).netloc and parsed.path == urlparse(query_counter.current_url).path and parsed.query != '':
+        elif parsed.scheme == parsed_current.scheme and parsed.netloc == parsed_current.netloc and parsed.path == parsed_current.path and parsed.query != '':
             query_counter.counter += 1
         # if the counter reaches 100 and it's still the same path, return an empty list
-        elif parsed.scheme == urlparse(query_counter.current_url).scheme and parsed.netloc == urlparse(query_counter.current_url).netloc and parsed.path == urlparse(query_counter.current_url).path and parsed.query != '' and query_counter.counter == 100:
+        elif parsed.scheme == parsed_current.scheme and parsed.netloc == parsed_current.netloc and parsed.path == parsed_current.path and parsed.query != '' and query_counter.counter == 100:
             return hyperlinks
         # if different path, reset the current url and the counter
         else:
             query_counter.current_url = url
             query_counter.counter = 0
+
+        print(query_counter.counter)
 
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, features="xml")
