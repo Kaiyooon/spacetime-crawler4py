@@ -73,8 +73,7 @@ from urllib.parse import urlparse, urldefrag, urljoin
 from bs4 import BeautifulSoup
 from tokenizer import tokenize, tokenizeNoStopWords, computeWordFrequencies
 from classes import unique, longest, common, subdomains
-from urloperations import getSchemeAndDomain, extractSubdomain, check_dups
-import tldextract
+from urloperations import getSchemeAndDomain, extractSubdomain, check_dups, urlCheck
 from simhash import Simhash, SimhashIndex
 
 
@@ -99,18 +98,19 @@ def extract_next_links(url, resp):
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, 'html.parser')
 
+        # We then check if it is low information so is it worth crawling
+        tokenList = tokenize(resp.raw_response.content)
+        tokenListNoStopWords = tokenizeNoStopWords(
+            resp.raw_response.content)
+        if len(tokenListNoStopWords) <= informationValue:
+            return hyperlinks
+
         # For get_text
         # https://stackoverflow.com/questions/14694482/converting-html-to-text-with-python
         stringAllContent = soup.get_text()
 
         # First we check if the content is duplicate
         if check_dups(stringAllContent):
-            return hyperlinks
-        # We then check if it is low information so is it worth crawling
-        tokenList = tokenize(resp.raw_response.content)
-        tokenListNoStopWords = tokenizeNoStopWords(
-            resp.raw_response.content)
-        if len(tokenListNoStopWords) <= informationValue:
             return hyperlinks
 
         for link in soup.find_all('a'):
@@ -199,25 +199,20 @@ def is_valid(url):
     try:
         if is_valid_domain(url):
             parsed = urlparse(url)
-            if parsed.scheme not in set(["http", "https"]):
+            blackList = urlCheck(parsed)
+            if blackList != None:
+                return blackList
+
+            # Courtesy of https://support.archive-it.org/hc/en-us/articles/208332963-Modify-your-crawl-scope-with-a-Regular-Expression
+
+            # Ignore repeating directories
+            if re.match(url, '^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$'):
                 return False
-            if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
+            # Ignore extra directories
+            elif re.match(url, '^.*(/misc|/sites|/all|/themes|/modules|/profiles|/css|/field|/node|/theme){3}.*$'):
                 return False
-            # Manually whitelist only certain pages from evoke.ics.uci.edu
-            # All others are blacklisted
-            if parsed.netloc.endswith("evoke.ics.uci.edu"):
-                # Home
-                if parsed.path == ("/") or parsed.path == (""):
-                    return True
-                # D&CA Page
-                elif parsed.path == ("/dca2021/"):
-                    return True
-                # Recruitment Page
-                elif parsed.path == ("/recruitment/"):
-                    return True
-                else:
-                    return False
-            if parsed.netloc.endswith("cbcl.ics.uci.edu") and parsed.path.startswith("/public_data/wgEncodeBroadHistone"):
+            # Ignore calendars
+            elif re.match(url, "^.*calendar.*$"):
                 return False
 
             return not re.match(

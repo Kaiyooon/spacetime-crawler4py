@@ -60,3 +60,29 @@ def check_dups(content):
         simhash_data.uniqueID += 1
         return False
     return True
+
+
+def urlCheck(parsed):
+    if parsed.scheme not in set(["http", "https"]):
+        return False
+    if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
+        return False
+        # Manually whitelist only certain pages from evoke.ics.uci.edu
+        # All others are blacklisted
+    if parsed.netloc.endswith("evoke.ics.uci.edu"):
+        # Home
+        if parsed.path == ("/") or parsed.path == (""):
+            return True
+        # D&CA Page
+        elif parsed.path == ("/dca2021/"):
+            return True
+        # Recruitment Page
+        elif parsed.path == ("/recruitment/"):
+            return True
+        else:
+            return False
+
+    if parsed.netloc.endswith("cbcl.ics.uci.edu") and parsed.path.startswith("/public_data/wgEncodeBroadHistone"):
+        return False
+
+    return None
