@@ -113,8 +113,6 @@ def extract_next_links(url, resp):
             query_counter.current_url = url
             query_counter.counter = 0
 
-        print(query_counter.counter)
-
         # Use BeautifulSoup to filter links from content
         soup = BeautifulSoup(resp.raw_response.content, features="xml")
 
