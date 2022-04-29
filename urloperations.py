@@ -84,7 +84,7 @@ def urlCheck(parsed):
         else:
             return False
 
-    if parsed.netloc.endswith("cbcl.ics.uci.edu") and parsed.path.startswith("/public_data/wgEncodeBroadHistone"):
+    if (parsed.netloc.endswith(".cbcl.ics.uci.edu") or parsed.netloc == ".cbcl.ics.uci.edu") and parsed.path.startswith("/public_data/wgEncodeBroadHistone"):
         return False
 
     return None
