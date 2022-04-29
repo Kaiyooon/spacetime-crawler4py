@@ -194,15 +194,15 @@ def extract_next_links(url, resp):
 def is_valid_domain(url):
     try:
         parsed = urlparse(url)
-        if parsed.netloc.endswith("ics.uci.edu"):
+        if parsed.netloc.endswith(".ics.uci.edu"):
             return True
-        elif parsed.netloc.endswith("cs.uci.edu"):
+        elif parsed.netloc.endswith(".cs.uci.edu"):
             return True
-        elif parsed.netloc.endswith("informatics.uci.edu"):
+        elif parsed.netloc.endswith(".informatics.uci.edu"):
             return True
-        elif parsed.netloc.endswith("stat.uci.edu"):
+        elif parsed.netloc.endswith(".stat.uci.edu"):
             return True
-        elif parsed.netloc.endswith("today.uci.edu") and parsed.path.startswith("/department/information_computer_sciences/"):
+        elif parsed.netloc == "today.uci.edu" and parsed.path.startswith("/department/information_computer_sciences/"):
             return True
         else:
             return False
