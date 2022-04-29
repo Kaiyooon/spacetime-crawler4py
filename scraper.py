@@ -114,7 +114,8 @@ def extract_next_links(url, resp):
             query_counter.counter = 0
 
         # Use BeautifulSoup to filter links from content
-        soup = BeautifulSoup(resp.raw_response.content, features="xml")
+        soup = BeautifulSoup(resp.raw_response.content,
+                             features="xml", from_encoding='utf8')
 
         # We then check if it is low information so is it worth crawling
         tokenList = tokenize(resp.raw_response.content)
