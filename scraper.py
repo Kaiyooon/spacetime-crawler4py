@@ -221,18 +221,6 @@ def is_valid(url):
             if blackList != None:
                 return blackList
 
-            # Courtesy of https://support.archive-it.org/hc/en-us/articles/208332963-Modify-your-crawl-scope-with-a-Regular-Expression
-
-            # Ignore repeating directories
-            if re.match(url, r'^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$'):
-                return False
-            # Ignore extra directories
-            elif re.match(url, r'^.*(/misc|/sites|/all|/themes|/modules|/profiles|/css|/field|/node|/theme){3}.*$'):
-                return False
-            # Ignore calendars
-            elif re.match(url, r"^.*calendar.*$"):
-                return False
-
             return not re.match(
                 r".*\.(css|js|bmp|gif|jpe?g|ico"
                 + r"|png|tiff?|mid|mp2|mp3|mp4"
