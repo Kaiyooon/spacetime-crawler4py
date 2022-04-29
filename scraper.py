@@ -227,10 +227,10 @@ def is_valid(url):
             if re.match(url, r'^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$'):
                 return False
             # Ignore extra directories
-        elif re.match(url, r'^.*(/misc|/sites|/all|/themes|/modules|/profiles|/css|/field|/node|/theme){3}.*$'):
+            elif re.match(url, r'^.*(/misc|/sites|/all|/themes|/modules|/profiles|/css|/field|/node|/theme){3}.*$'):
                 return False
             # Ignore calendars
-        elif re.match(url, r"^.*calendar.*$"):
+            elif re.match(url, r"^.*calendar.*$"):
                 return False
 
             return not re.match(
