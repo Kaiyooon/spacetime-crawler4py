@@ -67,6 +67,8 @@ def urlCheck(parsed):
         return False
     if parsed.netloc == "swiki.ics.uci.edu" and parsed.path.startswith("/doku.php/"):
         return False
+    if parsed.netloc == "ics.uci.edu" and parsed.path.startswith("/~agelfand/figs/"):
+        return False
         # Manually whitelist only certain pages from evoke.ics.uci.edu
         # All others are blacklisted
     if parsed.netloc.endswith("evoke.ics.uci.edu"):
