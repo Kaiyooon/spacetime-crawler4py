@@ -47,8 +47,8 @@ def get_features(s):
 
 
 def check_dups(content):
-    if len(content) > 10000:
-        content = content[:10000]
+    if len(content) > 7000:
+        content = content[:7000]
     s = Simhash(get_features(content))
     # Outside code used below:
     # https://leons.im/posts/a-python-implementation-of-simhash-algorithm/
